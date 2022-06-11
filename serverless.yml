@@ -1,0 +1,21 @@
+service: templante-api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20220515
+  stage: ${opt:stage}
+  region: ${opt:region}
+
+plugins:
+  - serverless-offline
+
+functions:
+  getHello:
+    handler: infraestructure/handlers/hello-handler.getHello
+    events:
+      - http:
+          path: helloword       # https://dominio.fulanito/{stage}/empleados
+          method: get
