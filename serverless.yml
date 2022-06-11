@@ -1,4 +1,4 @@
-service: templante-api
+service: step-test-word
 
 frameworkVersion: '3'
 
