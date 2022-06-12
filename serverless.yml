@@ -11,6 +11,7 @@ provider:
 
 plugins:
   - serverless-offline
+  - serverless-step-functions
 
 functions:
   getHello:
@@ -19,3 +20,36 @@ functions:
       - http:
           path: helloword       # https://dominio.fulanito/{stage}/empleados
           method: get
+  sf_step1:
+    handler: infraestructure/handlers/step-one-handler.stepOneHandler
+  sf_step2:
+    handler: infraestructure/handlers/step-two-handler.stepTwoHandler
+  sf_step3:
+    handler: infraestructure/handlers/step-three-handler.stepThreeandler
+
+stepFunctions:
+  stateMachines:
+    sfEnrollment:
+      events:
+        - http:
+            path: hellostep
+            method: GET
+      name: stepFunctions_test01
+      definition:
+        StartAt: sf_step1
+        States:
+          sf_step1:
+            Type: Task
+            Resource: 
+              Fn::GetAtt: [sf_step1, Arn]
+            Next: sf_step2
+          sf_step2:
+            Type: Task
+            Resource: 
+              Fn::GetAtt: [sf_step2, Arn]
+            Next: sf_step3
+          sf_step3:
+            Type: Task
+            Resource: 
+              Fn::GetAtt: [sf_step3, Arn]
+            End: true

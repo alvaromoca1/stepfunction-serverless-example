@@ -1,15 +1,28 @@
 const { responseSuccess, responseFail } = require('../helpers/responses');
 const { StatusCodes } = require('http-status-codes')
 
-const data = [
+const dataStep0ne = [
     {
-        hello:"good code in the day"
+        hello:"stpe 1 good code in the day"
+    }
+];
+
+const dataStepTwo = [
+    {
+        hello:"step 2 good code in the day"
+    }
+];
+
+const dataStepThree = [
+    {
+        hello:"step 3 good code in the day"
     }
 ];
 const stepOne = async() =>{
     let response = null
     try {
-        response = responseSuccess({ data });
+        response = responseSuccess({ dataStep0ne });
+        console.debug("one",dataStep0ne)
     } catch (error) {
         response = responseFail({
             message: "Error inesperado"
@@ -21,7 +34,8 @@ const stepOne = async() =>{
 const stepTwo = async() =>{
     let response = null
     try {
-        response = responseSuccess({ data });
+        response = responseSuccess({ dataStepTwo });
+        console.debug("two",dataStepTwo)
     } catch (error) {
         response = responseFail({
             message: "Error inesperado"
@@ -32,7 +46,8 @@ const stepTwo = async() =>{
 const stepThree = async() =>{
     let response = null
     try {
-        response = responseSuccess({ data });
+        response = responseSuccess({ dataStepThree });
+        console.debug("three",dataStepThree)
     } catch (error) {
         response = responseFail({
             message: "Error inesperado"
