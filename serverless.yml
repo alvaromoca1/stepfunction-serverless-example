@@ -1,4 +1,4 @@
-service: step-test-word
+service: step2-test-word
 
 frameworkVersion: '3'
 
@@ -30,11 +30,24 @@ functions:
 stepFunctions:
   stateMachines:
     sfEnrollment:
+      #type: EXPRESS
       events:
         - http:
             path: hellostep
             method: GET
-      name: stepFunctions_test01
+            #response:
+              #headers:
+              #  Content-Type: "'application/json'"
+              #  X-Application-Id: "'my-app'"
+              #template:
+              #  application/json: |
+              #    #set( $body = $util.escapeJavaScript($input.json('$')) )
+              #    #set( $name = $util.escapeJavaScript($output.json('$')) )
+              #    {
+              #      "input": "$body",
+              #      "name": "$name",
+              #    }
+      name: stepFunctions_test04
       definition:
         StartAt: sf_step1
         States:
@@ -52,4 +65,14 @@ stepFunctions:
             Type: Task
             Resource: 
               Fn::GetAtt: [sf_step3, Arn]
+            Retry:
+            - ErrorEquals:
+              - Lambda.ServiceException
+              - Lambda.AWSLambdaException
+              - Lambda.SdkClientException
+              IntervalSeconds: 2
+              MaxAttempts: 6
+              BackoffRate: 2
+            ResultPath: "$"
+            OutputPath: "$"
             End: true
