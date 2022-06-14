@@ -1,4 +1,4 @@
-service: step2-test-word
+service: step5-test-word
 
 frameworkVersion: '3'
 
@@ -8,17 +8,28 @@ provider:
   lambdaHashingVersion: 20220515
   stage: ${opt:stage}
   region: ${opt:region}
+  iam:
+    role:
+      name: "role-step5-test-wprd-dev"
+      statements:
+        - Effect: Allow
+          Action:
+          - "states:DescribeExecution"
+          - "states:DescribeStateMachineForExecution"
+          - states:StartExecution
+          - states:UpdateStateMachine
+          Resource: '*'
 
 plugins:
   - serverless-offline
   - serverless-step-functions
 
 functions:
-  getHello:
-    handler: infraestructure/handlers/hello-handler.getHello
+  getHelloStep:
+    handler: infraestructure/handlers/hello-handler.getHelloStep
     events:
       - http:
-          path: helloword       # https://dominio.fulanito/{stage}/empleados
+          path: hellostep       # https://dominio.fulanito/{stage}/hellostep
           method: get
   sf_step1:
     handler: infraestructure/handlers/step-one-handler.stepOneHandler
@@ -30,12 +41,7 @@ functions:
 stepFunctions:
   stateMachines:
     sfEnrollment:
-      #type: EXPRESS
-      events:
-        - http:
-            path: hellostep
-            method: GET
-      name: stepFunctions_test04
+      name: stepFunctions_test05
       definition:
         StartAt: sf_step1
         States:
@@ -54,5 +60,4 @@ stepFunctions:
             Resource: 
               Fn::GetAtt: [sf_step3, Arn]
             ResultPath: "$"
-            OutputPath: "$"
             End: true
