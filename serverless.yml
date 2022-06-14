@@ -49,15 +49,19 @@ stepFunctions:
             Type: Task
             Resource: 
               Fn::GetAtt: [sf_step1, Arn]
+            ResultPath: "$"
             Next: sf_step2
           sf_step2:
             Type: Task
             Resource: 
               Fn::GetAtt: [sf_step2, Arn]
+            InputPath: "$"
+            ResultPath: "$"
             Next: sf_step3
           sf_step3:
             Type: Task
             Resource: 
               Fn::GetAtt: [sf_step3, Arn]
+            InputPath: "$"
             ResultPath: "$"
             End: true

@@ -19,14 +19,17 @@ const stepOne = async() =>{
     return response;
 }
 
-const stepTwo = async() =>{
+const stepTwo = async(event) =>{
     let response = null
+
     const data = [
         {
             hello:"step 2 good code in the day"
         }
     ];
     try {
+        console.debug("event-2 ->>> : ",event)
+
         response = responseSuccess({ data });
         console.debug("two",data)
     } catch (error) {
@@ -36,14 +39,16 @@ const stepTwo = async() =>{
     }
     return response;
 }
-const stepThree = async() =>{
+const stepThree = async(event) =>{
     let response = null
+
     const data = 
         {
             hello:"step 3 good code in the day"
         }
     try {
         console.debug("dataStepThree : ",data)
+        console.debug("event : ",event)
         response = await responseSuccess({ data });
         console.debug("reponse : ",response);
         console.debug("three",data)

@@ -5,6 +5,6 @@ const {
 } = require('../../application/controllers/stepController')
 
 module.exports.stepThreeandler = async (event) => {
-  const { success, data, message, statusCode } = await stepThreeController();
+  const { success, data, message, statusCode } = await stepThreeController(event);
   return responseHttp(success, data, message, statusCode);
 };

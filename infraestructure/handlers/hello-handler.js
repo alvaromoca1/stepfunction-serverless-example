@@ -9,7 +9,7 @@ module.exports.getHelloStep = async (event) => {
   const reqBody = event.body || {};
   const stepfunctions = new AWS.StepFunctions();
   var params = {
-    stateMachineArn: 'arn:aws:states:us-east-1:776703223828:stateMachine:stepFunctions_test04',
+    stateMachineArn: 'arn:aws:states:us-east-1:776703223828:stateMachine:stepFunctions_test05',
     input: JSON.stringify(reqBody)
   }
   
