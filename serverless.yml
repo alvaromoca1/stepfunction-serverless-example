@@ -1,4 +1,4 @@
-service: step2-test-word
+service: step6-test-word
 
 frameworkVersion: '3'
 
@@ -8,6 +8,18 @@ provider:
   lambdaHashingVersion: 20220515
   stage: ${opt:stage}
   region: ${opt:region}
+  iam:
+    role:
+      name: "role-step6-test-wprd-dev"
+      statements:
+        - Effect: Allow
+          Action:
+          - "states:DescribeExecution"
+          - "states:DescribeStateMachineForExecution"
+          - states:StartSyncExecution
+          - states:StartExecution
+          - states:UpdateStateMachine
+          Resource: '*'
 
 plugins:
   - serverless-offline
@@ -28,14 +40,45 @@ functions:
     handler: infraestructure/handlers/step-three-handler.stepThreeandler
 
 stepFunctions:
+  validate: true
   stateMachines:
-    sfEnrollment:
-      #type: EXPRESS
+    sfExpress:
+      type: EXPRESS
       events:
         - http:
-            path: hellostep
-            method: GET
-      name: stepFunctions_test04
+            path: hellostepp
+            method: POST
+            action: StartSyncExecution
+            request:
+              template:
+                application/json: |
+                  #set($body= $input.json('$'))
+                  #set($inputRoot='{ "data" :'+$body+',"apiInfo":{"httpMethod" :"'+ $context.httpMethod+'", "apiKey":"'+ $context.identity.apiKey+'"}}')
+                  #set($apiData=$util.escapeJavaScript($inputRoot))
+                  #set($apiData=$apiData.replaceAll("\\'","'"))
+                  {
+                    "input" :"$apiData",
+                    "stateMachineArn": "arn:aws:states:us-east-1:776703223828:stateMachine:stepFunctions_test06"
+                  }
+            response:
+              headers:
+                Content-Type: "'application/json'"
+              template:
+                application/json: |
+                  #set ($bodyObj = $util.parseJson($input.body))
+                  #if ($bodyObj.status == "SUCCEEDED")
+                    $util.parseJson($bodyObj.output).body
+                  #elseif ($bodyObj.status == "FAILED")
+                    #set($context.responseOverride.status = 500)
+                    {
+                      "cause": "$bodyObj.cause",
+                      "error": "$bodyObj.error"
+                    }
+                  #else
+                    #set($context.responseOverride.status = 500)
+                    $input.body
+                  #end
+      name: stepFunctions_test06
       definition:
         StartAt: sf_step1
         States:
